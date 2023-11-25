@@ -4,6 +4,12 @@ import pandas as pd
 from PIL import Image, ImageDraw
 
 
+def rename_files(labels):
+    labels.filename = labels.filename.replace('NCLB.jpg', 'Corn-NCLB.jpg')
+    labels.filename = labels.filename.replace('early-blight-1.jpg', 'tomato-early-blight-1.jpg')
+    return labels
+
+
 def add_coco_annot(labels):
     image_ids = dict(
         (k, v) for k, v in zip(labels["filename"].unique(), range(len(labels["filename"].unique()))))
@@ -49,22 +55,5 @@ def formatted_anns(image_id, category, area, bbox):
 
 
 # transforming a batch
-def transform_aug_ann(examples, transform, image_processor):
-    image_ids = examples["image_id"]
-    images, bboxes, area, categories = [], [], [], []
-    for image, objects in zip(examples["image"], examples["objects"]):
-        image = np.array(image.convert("RGB"))[:, :, ::-1]
-        out = transform(image=image, bboxes=objects["bbox"], category=objects["category"])
 
-        area.append(objects["area"])
-        images.append(out["image"])
-        bboxes.append(out["bboxes"])
-        categories.append(out["category"])
-
-    targets = [
-        {"image_id": id_, "annotations": formatted_anns(id_, cat_, ar_, box_)}
-        for id_, cat_, ar_, box_ in zip(image_ids, categories, area, bboxes)
-    ]
-
-    return image_processor(images=images, annotations=targets, return_tensors="pt")
 
