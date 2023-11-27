@@ -1,4 +1,3 @@
-import datasets
 from datasets import load_dataset
 
 import torch
@@ -7,8 +6,8 @@ from transformers import AutoFeatureExtractor, AutoModelForImageClassification
 
 dataset = load_dataset("beans")
 
-extractor = AutoFeatureExtractor.from_pretrained("nateraw/vit-base-beans")
-model = AutoModelForImageClassification.from_pretrained("nateraw/vit-base-beans")
+extractor = AutoFeatureExtractor.from_pretrained("susnato/plant_disease_detection-beans")
+model = AutoModelForImageClassification.from_pretrained("susnato/plant_disease_detection-beans")
 
 labels = ['angular_leaf_spot', 'rust', 'healthy']
 
@@ -46,6 +45,18 @@ with block:
                 """
             )
 
+        with gr.Row():
+            gr.HTML(
+                """
+                <p align="center">
+                <h4>
+                    Our Approach
+                </h4>
+                    <img src="https://huggingface.co/datasets/susnato/stock_images/resolve/main/diagram.jpeg">
+                </p>
+                """
+            )
+
     with gr.Group():
         image = gr.Image(type='pil')
         outputs = gr.Label()
@@ -56,13 +67,14 @@ with block:
                      outputs=[outputs],
                      )
 
-        # gr.Examples([
-        #     ["", ""],
-        # ],
-        #     fn=classify,
-        #     inputs=[image],
-        #     outputs=[outputs],
-        #     cache_examples=True
-        # )
+    with gr.Group():
+        gr.Examples([
+            ["ex1.jpg", "ex3.jpg"],
+        ],
+            fn=classify,
+            inputs=[image],
+            outputs=[outputs],
+            cache_examples=True
+        )
 
-block.launch(debug=False, share=True)
+block.launch(debug=False, share=False)
