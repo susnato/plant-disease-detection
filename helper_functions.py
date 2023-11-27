@@ -1,4 +1,5 @@
 import os
+import torch
 import numpy as np
 import pandas as pd
 from PIL import Image, ImageDraw
@@ -15,7 +16,9 @@ def add_coco_annot(labels):
         (k, v) for k, v in zip(labels["filename"].unique(), range(len(labels["filename"].unique()))))
     labels['image_id'] = labels["filename"].map(lambda x: image_ids[x])
 
-    class_labels = dict((k, v) for k, v in zip(labels["class"].unique(), range(len(labels["class"].unique()))))
+    # class_labels = dict((k, v) for k, v in zip(labels["class"].unique(), range(len(labels["class"].unique()))))
+    class_labels = torch.load("./classes.pth")
+    print(class_labels)
     labels['class_label'] = labels["class"].map(lambda x: class_labels[x])
 
     labels.loc[:, "image_height"] = labels["height"]
@@ -54,6 +57,5 @@ def formatted_anns(image_id, category, area, bbox):
     return annotations
 
 
-# transforming a batch
 
 

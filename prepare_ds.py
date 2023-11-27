@@ -115,7 +115,7 @@ image_processor = AutoImageProcessor.from_pretrained(checkpoint)
 
 transform = albumentations.Compose(
     [
-        albumentations.Resize(480, 480),
+        albumentations.Resize(800, 800),
         albumentations.HorizontalFlip(p=1.0),
         albumentations.RandomBrightnessContrast(p=1.0),
     ],
